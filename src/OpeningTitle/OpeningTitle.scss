@@ -1,16 +1,8 @@
-body {
-    color:yellow;
-    font-family: 'Pathway Gothic One', sans-serif;
-    width:100%;
-    height: 100vh;
-    overflow: hidden;
-}
 .fade {
     position: relative;
     width: 100%;
     min-height: 60vh;
     top: -25px;
-    background-image: linear-gradient(0deg, transparent, black 75%);
     z-index: 1;
   }
 
@@ -34,6 +26,21 @@ body {
     line-height: 150%;
     perspective: 400px;
     text-align: justify;
+  }
+
+  .rebel {
+      height: 115px;
+      margin: 20px;
+  }
+
+  .loading-wrapper {
+      display: flex;
+      justify-content: center
+  }
+
+  .load {
+      font-size: 50px;
+      color:slategrey;
   }
 
 @keyframes crawl {
