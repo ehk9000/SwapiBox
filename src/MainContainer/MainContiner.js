@@ -3,7 +3,7 @@ import './MainContainer.scss'
 import Categories from '../Categories/Categories';
 import CardContainer from '../CardContainer/CardContainer'
 import rebel from '../images/rebel-alliance.svg'
-import {fetchCat, fetchHomeworlds, fetchSpecies} from '../apiCalls/apiCalls'
+import {fetchCat, fetchHomeworlds, fetchSpecies, fetchResidents} from '../apiCalls/apiCalls'
 
 
 class MainContainer extends Component {
@@ -28,15 +28,38 @@ class MainContainer extends Component {
         console.log('category', category)
         this.setState({category}, () => {
             if(!this.state.results[category].length) {
-                this.setState({isLoading: true})
-                fetchCat(category)
-                .then(data => fetchHomeworlds(data.results))
-                .then(people => fetchSpecies(people))
-                .then(people => this.formatPeople(people))
-                .catch(error => this.setState({error}))
+                this.setState({isLoading: true}, () => {
+                    if(category === 'people') {
+                        this.getPeople(category);
+                    } else if (category === 'planets') {
+                        this.getPlanets(category);
+                    } else {
+                        this.fetchVehicles(category);
+                    }
+                })
             }
         })
     }
+
+    getPeople = (category) => {
+        fetchCat(category)
+            .then(data => fetchHomeworlds(data.results))
+            .then(people => fetchSpecies(people))
+            .then(people => this.formatPeople(people))
+            .catch(error => this.setState({error}))
+    }
+
+    getPlanets = (category) => {
+        fetchCat(category)
+        .then(data => fetchResidents(data.results))
+        .then(planets => this.formatPlanets(planets))
+        .catch(error => this.setState({error}))
+    }
+
+    // getVehicles = (category) => {
+    //     fetchCat(category)
+
+    // }
 
     formatPeople = (people) => {
         const formatedPeople = people.map(person => {
@@ -44,8 +67,16 @@ class MainContainer extends Component {
             return {name, homeworld, population, species}
         });
         this.setState({results: {...this.state.results, people: formatedPeople}, isLoading: false})
-        console.log(this.state.results.people)
     }
+
+    formatPlanets = (planets) => {
+        const formatedPlanets = planets.map(planet => {
+            let {name, terrain, population, climate, residents} = planet;
+            return {name, terrain, population, climate, residents}
+        });
+        this.setState({results: {...this.state.results, planets: formatedPlanets }, isLoading: false})
+    }
+
 
 
     render() {

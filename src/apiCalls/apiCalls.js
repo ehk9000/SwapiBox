@@ -48,3 +48,27 @@ export const fetchSpecies = (people) => {
     });
     return Promise.all(speciesPromises)
 }
+
+export const fetchResidents = (planets) => {
+    const residentsPromises = planets.map(planet => {
+       return fetchNames(planet.residents)
+       .then(resident => ({...planet, resident}))
+    })
+    return Promise.all(residentsPromises)
+}
+
+export const fetchNames = (residents) => {
+    const namePromises = residents.map(resident => {
+        return fetch(resident)
+        .then(response => {
+            if(!response.ok) {
+                throw new Error('Error reaching residents')
+            }
+            return response.json();
+        })
+        .then(person => person.name)
+
+    })
+    return Promise.all(namePromises)
+
+}

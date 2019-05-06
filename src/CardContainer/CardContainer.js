@@ -4,8 +4,6 @@ import './CardContainer.scss'
 
 function CardContainer(props)  {
     const { results } = props;
-    console.log("results", results)
-
     const cards = results.map(card => {
         return <Card details={card} />
     });
