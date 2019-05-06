@@ -1,37 +1,40 @@
 import React, {Component} from 'react';
 import './OpeningTitle.scss'
 import rebel from '../images/rebel-alliance.svg'
+import {fetchFilm} from '../apiCalls/apiCalls'
 
 
 
 class OpeningTitle extends Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             randomFilm: [],
-            isLoading: false
+            isLoading: false,
+            error: ''
         }
     }
 
-    async componentDidMount() {
+     componentDidMount() {
+        this.setState({isLoading: true}, this.getFilm())
+    }
+
+    getFilm = () => {
         const index = Math.floor(Math.random() * 7) + 1;
-        this.setState({isLoading: true})
-        const url = `https://swapi.co/api/films/${index}`;
-        const response = await fetch(url);
-        const randomFilm = await response.json();
-        this.setState({randomFilm, isLoading: false})
-        console.log(this.state.randomFilm)
+        fetchFilm(index)
+        .then(randomFilm => this.setState({randomFilm, isLoading: false}))
+        .catch(error => this.setState({error}))
     }
 
     render() {
         const {opening_crawl: openingCrawl, title, release_date: date} = this.state.randomFilm;
-        let openingContainer = this.state.isLoading ? 
+        let openingContainer = this.state.isLoading ? (
         <div className="loading-wrapper">
             <img src={rebel} alt="Rebel Alliance Icon" className="rebel" />
             <p className="load" >Loading...</p>
             <img src={rebel} alt="Rebel Alliance Icon" className="rebel" />
-        </div>
-        :
+        </div> 
+        ) : (
         <article className="fade">
             <section className="star-wars">
                 <div className="crawl">
@@ -40,10 +43,13 @@ class OpeningTitle extends Component {
                     <p>{date}</p>
                 </div>
             </section>  
-        </article>
-
+        </article> 
+        );
         return (
             <div>
+              <aside>
+                  <button className="skip-btn" onClick={this.props.skipInto}>Skip Intro</button>
+              </aside>
               {openingContainer}
             </div>
         )

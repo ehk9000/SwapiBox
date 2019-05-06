@@ -43,6 +43,14 @@
       color:slategrey;
   }
 
+  .remove {
+      display: none;
+  }
+
+  .skip-btn {
+      z-index: 4;
+  }
+
 @keyframes crawl {
     0% {
         top: 0;
