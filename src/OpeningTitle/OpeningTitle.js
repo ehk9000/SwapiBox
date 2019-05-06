@@ -4,7 +4,6 @@ import rebel from '../images/rebel-alliance.svg'
 import {fetchFilm} from '../apiCalls/apiCalls'
 
 
-
 class OpeningTitle extends Component {
     constructor(props) {
         super(props);
